@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTMLchanger</title>
+        <meta charset="utf-8">
+        <meta name="description" content="プレーンテキストを.htmlで保存できるようにしたローカル専用のソフト">
+        <style>
+            body
+            {
+                background: #fff000;
+            }
+            div
+            {
+                background: #ffffff;
+                width: 300px;
+            }
+            button
+            {
+                width: 100px;
+                height: 50px;
+                background-color: brown;
+                color: aquamarine;
+            }
+        </style>
+    </head>
+    <body> 
+        <script>
+            //今日の日付データを変数hidukeに格納
+            var hiduke=new Date(); 
+            
+            //年・月・日・曜日を取得する
+            var year = hiduke.getFullYear();
+            var month = hiduke.getMonth()+1;
+            var week = hiduke.getDay();
+            var day = hiduke.getDate();
+            
+            var yobi= new Array("日","月","火","水","木","金","土");
+            
+            document.write("本日の日付: "+"西暦"+year+"年"+month+"月"+day+"日 "+yobi[week]+"曜日");
+            
+        </script>
+        <br><button type="button" id="inputFile">Import</button>
+        <pre><code id="contents"></code></pre>
+        <button type="button" id="outputFile">Export</button>
+        
+        <script>
+            let currentContents = '';
+            const displayElement = document.getElementById('contents');
+
+            document.getElementById('inputFile').addEventListener('click', (e) => {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.setAttribute('hidden', true);
+
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+  
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const fileContents = e.target.result;
+                        displayElement.textContent = fileContents;
+                        currentContents = fileContents;
+                    }
+                reader.readAsText(file);
+                }, false);
+  
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            fileInput.remove();
+            }, false);
+
+
+            document.getElementById('outputFile').addEventListener('click', (e) => {
+                const downloadLink = document.createElement('a');
+                downloadLink.download = 'export.html';
+                downloadLink.href = URL.createObjectURL(new Blob([currentContents], { 'type' : 'html' }));
+            downloadLink.setAttribute('hidden', true);
+
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
+        }, false);
+            </script>
+    </body>
+</html>
